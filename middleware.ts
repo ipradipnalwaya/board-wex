@@ -1,11 +1,16 @@
-import { WithClerkMiddleware } from "@clerk/nextjs/server";
+import { withClerkMiddleware } from "@clerk/nextjs/server";
 
-export default WithClerkMiddleware((req, res) => {
+export default withClerkMiddleware((req, res, next) => {
   // Your logic here
   const isProtected = req.url.startsWith("/api") || req.url === "/";
   if (isProtected) {
-    // Protect route logic
+    // Check authentication
+    if (!req.auth.userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
   }
+  // Proceed to the next middleware or handler
+  next();
 });
 
 export const config = {
