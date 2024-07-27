@@ -1,10 +1,23 @@
-import { authMiddleware } from "@clerk/nextjs";
- 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({});
- 
+import { withClerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+
+// Use a custom afterAuth function to control behavior after authentication
+export default withClerkMiddleware((req) => {
+  return NextResponse.next();
+}, {
+  afterAuth(auth, req, evt) {
+    // Custom logic based on authentication status
+    if (!auth.userId) {
+      // Allow access to the home page even if not authenticated
+      if (req.nextUrl.pathname === "/") {
+        return NextResponse.next();
+      }
+      // Redirect unauthenticated users to a sign-in page or other location
+      return NextResponse.redirect("/sign-in");
+    }
+  }
+});
+
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
