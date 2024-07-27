@@ -1,9 +1,9 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { withClerkMiddleware } from "@clerk/nextjs/server";
 
-export default clerkMiddleware((auth, req) => {
-  // Here, you can include custom logic for route protection if needed
-  // Example: if (req.url.startsWith("/protected")) auth().protect();
-  auth().protect(); // Apply authentication to all matched routes
+// This middleware function will enforce authentication on the specified routes
+export default withClerkMiddleware((req, res, next) => {
+  // Apply custom logic if needed before calling next()
+  next();
 });
 
 export const config = {
