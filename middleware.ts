@@ -1,9 +1,11 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { WithClerkMiddleware } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/(.*)", "/"]);
-
-export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+export default WithClerkMiddleware((req, res) => {
+  // Your logic here
+  const isProtected = req.url.startsWith("/api") || req.url === "/";
+  if (isProtected) {
+    // Protect route logic
+  }
 });
 
 export const config = {
