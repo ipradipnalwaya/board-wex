@@ -1,15 +1,9 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// Create a route matcher to identify which routes need protection
-const isProtectedRoute = createRouteMatcher(["/(.*)", "/"]);
-
-// Export the clerk middleware with a custom function
 export default clerkMiddleware((auth, req) => {
-  // Check if the request matches the protected routes
-  if (isProtectedRoute(req)) {
-    // Enforce authentication on protected routes
-    auth().protect();
-  }
+  // Here, you can include custom logic for route protection if needed
+  // Example: if (req.url.startsWith("/protected")) auth().protect();
+  auth().protect(); // Apply authentication to all matched routes
 });
 
 export const config = {
